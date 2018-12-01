@@ -48,7 +48,7 @@
          float DrawGrid(float2 uv, float sz, float aa)
          {
             float aaThresh = aa;
-            float aaMin = aa*0.1;
+            float aaMin = aa*0.01;
 
             float2 gUV = uv / sz + aaThresh;
 
@@ -63,7 +63,7 @@
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-				fixed r = DrawGrid(i.uv, _GridSize, 0.1);
+				fixed r = DrawGrid(i.uv, _GridSize, 0.05);
 				return _Color * r;
 			}
 			ENDCG
