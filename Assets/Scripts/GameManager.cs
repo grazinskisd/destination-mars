@@ -17,12 +17,6 @@ namespace Ldjam43
             _playerStart = Player.transform.position;
 
             CorpsePopup.CloseButton.onClick.AddListener(() => CorpsePopup.gameObject.SetActive(false));
-            CorpsePopup.Water.TakeButton.onClick.AddListener(() =>
-            {
-                float waterUsed = (Player.WaterCapacity - Player.RemainingWater);
-                Player.RemainingWater = Mathf.Min(Player.RemainingWater + CorpsePopup.Water.LootAmount, Player.WaterCapacity);
-                CorpsePopup.Water.SetLoot(Mathf.Max(0, CorpsePopup.Water.LootAmount - waterUsed));
-            });
             CorpsePopup.gameObject.SetActive(false);
         }
 
@@ -50,6 +44,14 @@ namespace Ldjam43
         {
             CorpsePopup.gameObject.SetActive(true);
             CorpsePopup.Water.SetLoot(sender.Water);
+            CorpsePopup.Water.TakeButton.onClick.RemoveAllListeners();
+            CorpsePopup.Water.TakeButton.onClick.AddListener(() =>
+            {
+                float waterUsed = (Player.WaterCapacity - Player.RemainingWater);
+                Player.RemainingWater = Mathf.Min(Player.RemainingWater + CorpsePopup.Water.LootAmount, Player.WaterCapacity);
+                CorpsePopup.Water.SetLoot(Mathf.Max(0, CorpsePopup.Water.LootAmount - waterUsed));
+                sender.Water = Mathf.Max(0, CorpsePopup.Water.LootAmount - waterUsed);
+            });
         }
     }
 }
