@@ -1,59 +1,93 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public delegate void PlayerEventHandler(Player sender);
-
-public class Player : MonoBehaviour
+namespace Ldjam43
 {
-    public float MoveSpeed;
-    public float Water;
-    public float WaterUsage;
-    public Slider WaterMeter;
+    public delegate void PlayerEventHandler(Player sender);
 
-    private Transform _transform;
-    private float _timePassed;
-    private float _startWater;
-
-    private void Awake()
+    public class Player : MonoBehaviour
     {
-        _transform = transform;
-        _timePassed = 0;
-        _startWater = Water;
-    }
+        public event PlayerEventHandler OnDie;
 
-    void Start () {
+        public KeyCode KillKey;
+        public float MoveSpeed;
+        public float WaterCapacity;
+        public float WaterUsage;
+        public Slider WaterMeter;
 
-	}
+        private Transform _transform;
+        private float _remainingWater;
 
-	void Update () {
-        if (Horizontal != 0 || Vertical != 0)
+        private void Awake()
         {
-            _transform.position += Time.deltaTime * MoveSpeed * (Vector3.right * Horizontal + Vector3.forward * Vertical);
-            _timePassed += Time.deltaTime;
+            _transform = transform;
+        }
 
-            var usedWater = WaterUsage * _timePassed;
-            WaterMeter.value = (_startWater - usedWater) / _startWater;
+        void Start()
+        {
+            ResetPlayer();
+        }
 
-            if(usedWater >= _startWater)
+        public float RemainingWater
+        {
+            get
+            {
+                return _remainingWater;
+            }
+
+            set
+            {
+                _remainingWater = value;
+                WaterMeter.value = _remainingWater / WaterCapacity;
+            }
+        }
+
+        void Update()
+        {
+            if (Horizontal != 0 || Vertical != 0)
+            {
+                _transform.position += Time.deltaTime * MoveSpeed * (Vector3.right * Horizontal + Vector3.forward * Vertical);
+                RemainingWater -= Time.deltaTime * WaterUsage;
+
+                if (RemainingWater <= 0)
+                {
+                    RemainingWater = 0;
+                    Die();
+                }
+            }
+
+            if (Input.GetKeyDown(KillKey))
             {
                 Die();
             }
         }
-	}
 
-    private void Die()
-    {
-        throw new NotImplementedException();
-    }
+        private void Die()
+        {
+            IssuePlayerEvent(OnDie);
+        }
 
-    private float Horizontal
-    {
-        get { return Input.GetAxis("Horizontal"); }
-    }
+        public void ResetPlayer()
+        {
+            RemainingWater = WaterCapacity;
+        }
 
-    private float Vertical
-    {
-        get { return Input.GetAxis("Vertical"); }
+        private void IssuePlayerEvent(PlayerEventHandler eventToIssue)
+        {
+            if (eventToIssue != null)
+            {
+                eventToIssue(this);
+            }
+        }
+
+        private float Horizontal
+        {
+            get { return Input.GetAxis("Horizontal"); }
+        }
+
+        private float Vertical
+        {
+            get { return Input.GetAxis("Vertical"); }
+        }
     }
 }
