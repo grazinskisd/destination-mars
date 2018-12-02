@@ -96,6 +96,7 @@ namespace Ldjam43
             else
             {
                 Rigidbody.velocity = Vector3.zero;
+                ThrustEffect.Stop();
             }
         }
 

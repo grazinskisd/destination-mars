@@ -42,8 +42,20 @@ namespace Ldjam43
             _shipStartPosition = Ship.transform.position;
             _shipStartRotation = Ship.transform.rotation.eulerAngles;
             EndMenu.gameObject.SetActive(false);
-            EndMenu.RestartButton.onClick.AddListener(() =>
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name));
+            EndMenu.RestartButton.onClick.AddListener(RestartGame);
+        }
+
+        private static void RestartGame()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                RestartGame();
+            }
         }
 
         private void ShipExplosion()
