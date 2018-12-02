@@ -53,8 +53,48 @@ namespace Ldjam43
         private void ShopLoadMenu(Shipwreck sender)
         {
             SetLoadMenuActive(true);
+            LoadMenu.SetSliderValues(sender.Fuel, sender.Oxygen, sender.Food);
+            var shipCap = LoadMenu.StartCapacity - (Ship.FoodLeft + Ship.FuelLeft + Ship.OxygenLeft);
+            //var wreckCap = LoadMenu.StartCapacity - (sender.Fuel + sender.Oxygen + sender.Food);
+
+            Debug.Log("shipCap: " + shipCap);
+
+            //var minFuel = GetMin(Ship.FuelLeft, sender.Fuel, shipCap);
+            //var minOxygen = GetMin(Ship.OxygenLeft, sender.Oxygen, shipCap);
+            //var minFood = GetMin(Ship.FoodLeft, sender.Food, shipCap);
+            //LoadMenu.SetMinValuesForSliders(minFuel, minOxygen, minFood);
+
+            //var maxFuel = GetMax(Ship.FuelLeft, sender.Fuel, wreckCap);
+            //var maxOxygen = GetMax(Ship.OxygenLeft, sender.Oxygen, wreckCap);
+            //var maxFood = GetMax(Ship.FoodLeft, sender.Food, wreckCap);
+            LoadMenu.IsLoading = false;
+            LoadMenu.SetCapacity(Mathf.Round(shipCap));
+            LoadMenu.SetMaxValuesForSliders(sender.Fuel, sender.Oxygen, sender.Food);
+
+            LoadMenu.OnSliderChanged += UpdateShipResources;
+
+            IssueEvent(OnPause);
             Debug.Log("CLICK");
             // TODO: make it work, god dam it!
+        }
+
+        private void UpdateShipResources()
+        {
+            var fuel = Ship.FuelLeft + (LoadMenu.Fuel.Slider.maxValue - LoadMenu.Fuel.Slider.value);
+            var oxygen = Ship.OxygenLeft + (LoadMenu.Oxygen.Slider.maxValue - LoadMenu.Oxygen.Slider.value);
+            var food = Ship.FoodLeft + (LoadMenu.Food.Slider.maxValue - LoadMenu.Food.Slider.value);
+
+            Ship.SetResources(fuel, oxygen, food);
+        }
+
+        private float GetMin(float current, float left, float capacity)
+        {
+            return Mathf.Clamp((current + left) - capacity, 0, capacity);
+        }
+
+        private float GetMax(float current, float left, float capacity)
+        {
+            return Mathf.Clamp((current + left), 0, capacity);
         }
 
         private void LaunchShip()

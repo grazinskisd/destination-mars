@@ -12,7 +12,7 @@ namespace Ldjam43
         private const string FOOD = "Food: {0}";
 
         public event LoadMenuEventHandler OnStart;
-        public event LoadMenuEventHandler OnExit;
+        public event LoadMenuEventHandler OnSliderChanged;
 
         public int StartCapacity;
         public Text CapacityLabel;
@@ -20,46 +20,108 @@ namespace Ldjam43
         public Load Oxygen;
         public Load Food;
         public Button StartButton;
-        public Button ExitButton;
 
         private bool _canStart;
+        private float _currentCapacity;
+
+        [HideInInspector]
+        public bool IsLoading;
+
+        public void SetCapacity(float newCapacity)
+        {
+            _currentCapacity = newCapacity;
+        }
+
+        public void SetSliderValues(float fuel, float oxygen, float food)
+        {
+            Fuel.Slider.value = fuel;
+            Oxygen.Slider.value = oxygen;
+            Food.Slider.value = food;
+        }
+
+        public void SetMinValuesForSliders(float fuel, float oxygen, float food)
+        {
+            Fuel.Slider.minValue = fuel;
+            Oxygen.Slider.minValue = oxygen;
+            Food.Slider.minValue = food;
+        }
+
+        public void SetMaxValuesForSliders(float fuel, float oxygen, float food)
+        {
+            Fuel.Slider.maxValue = fuel;
+            Oxygen.Slider.maxValue = oxygen;
+            Food.Slider.maxValue = food;
+        }
+
+        public void ResetMenu()
+        {
+            ResetSlider(Fuel.Slider);
+            ResetSlider(Oxygen.Slider);
+            ResetSlider(Food.Slider);
+
+            _currentCapacity = StartCapacity;
+        }
+
+        private void ResetSlider(Slider slider)
+        {
+            slider.minValue = 0;
+            slider.maxValue = 100;
+            IsLoading = true;
+        }
 
         private void Start()
         {
+            ResetMenu();
+
             Fuel.Slider.onValueChanged.AddListener((val) =>
             {
                 Fuel.Label.text = string.Format(FUEL, val);
                 UpdateCapacity();
+                IssueEvent(OnSliderChanged);
             });
 
             Oxygen.Slider.onValueChanged.AddListener((val) =>
             {
                 Oxygen.Label.text = string.Format(OXYGEN, val);
                 UpdateCapacity();
+                IssueEvent(OnSliderChanged);
             });
 
             Food.Slider.onValueChanged.AddListener((val) =>
             {
                 Food.Label.text = string.Format(FOOD, val);
                 UpdateCapacity();
+                IssueEvent(OnSliderChanged);
             });
 
-            Fuel.Slider.value = 33;
-            Oxygen.Slider.value = 33;
-            Food.Slider.value = 33;
-
+            SetSliderValues(33, 33, 33);
             StartButton.onClick.AddListener(() => IssueEvent(OnStart));
-            ExitButton.onClick.AddListener(() => IssueEvent(OnExit));
-
             UpdateCapacity();
         }
 
         private void UpdateCapacity()
         {
-            var leftCap = StartCapacity - (Fuel.Slider.value + Oxygen.Slider.value + Food.Slider.value);
+            float leftCap = _currentCapacity - (IsLoading ? GetSum() : GetDiffSum());
             CapacityLabel.text = string.Format(CAPACITY, leftCap);
             CapacityLabel.color = leftCap < 0 ? Color.red : Color.white;
             StartButton.interactable = leftCap >= 0;
+        }
+
+        private float GetSum()
+        {
+            return (Fuel.Slider.value + Oxygen.Slider.value + Food.Slider.value);
+        }
+
+        private float GetDiffSum()
+        {
+            return GetDiff(Fuel.Slider) +
+                    GetDiff(Oxygen.Slider) +
+                    GetDiff(Food.Slider);
+        }
+
+        private float GetDiff(Slider slider)
+        {
+            return slider.maxValue - slider.value;
         }
 
         private void IssueEvent(LoadMenuEventHandler eventToIssue)
