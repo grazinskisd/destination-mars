@@ -8,6 +8,7 @@ namespace Ldjam43
     public class Ship : MonoBehaviour
     {
         public event ShipEventHandler OnDie;
+        public event ShipEventHandler OnWin;
 
         private const string SHIPWRECK = "Shipwreck";
 
@@ -79,7 +80,6 @@ namespace Ldjam43
 
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("BEHOLD " + other.name);
             if (other.CompareTag(SHIPWRECK))
             {
                 // Can interact
@@ -95,6 +95,15 @@ namespace Ldjam43
                 // Can no longer interact
                 var wreck = other.GetComponent<Shipwreck>();
                 wreck.Interactable = false;
+            }
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (collision.transform.CompareTag("Mars"))
+            {
+                // Win
+                IssueEvent(OnWin);
             }
         }
 

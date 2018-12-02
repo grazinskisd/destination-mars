@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Ldjam43
 {
@@ -14,6 +15,8 @@ namespace Ldjam43
         public LoadMenu LoadMenu;
         public Ship Ship;
         public Shipwreck ShipwreckPrefab;
+
+        public EndMenu EndMenu;
 
         private Vector3 _shipStartPosition;
         private Vector3 _shipStartRotation;
@@ -30,8 +33,19 @@ namespace Ldjam43
             SetLoadMenuActive(true);
             LoadMenu.OnStart += LaunchShip;
             Ship.OnDie += RestartMission;
+            Ship.OnWin += ShowEndMenu;
             _shipStartPosition = Ship.transform.position;
             _shipStartRotation = Ship.transform.rotation.eulerAngles;
+            EndMenu.gameObject.SetActive(false);
+            EndMenu.RestartButton.onClick.AddListener(() =>
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name));
+        }
+
+        private void ShowEndMenu()
+        {
+            EndMenu.gameObject.SetActive(true);
+            EndMenu.Label.text = string.Format("Sacrifices: {0}", _allWrecks.Count);
+            IssueEvent(OnPause);
         }
 
         private void RestartMission()
@@ -72,7 +86,6 @@ namespace Ldjam43
             LoadMenu.OnStart += ResumeMission;
 
             IssueEvent(OnPause);
-            Debug.Log("CLICK");
         }
 
         private void ResumeMission()
