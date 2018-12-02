@@ -7,6 +7,7 @@ namespace Ldjam43
     public class Shipwreck: MonoBehaviour
     {
         public event ShipwreckEventHandler OnClicked;
+        public event ShipwreckEventHandler OnCollision;
 
         public float Fuel;
         public float Oxygen;
@@ -38,6 +39,11 @@ namespace Ldjam43
             {
                 IssueEvent(OnClicked);
             }
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            IssueEvent(OnCollision);
         }
 
         private void IssueEvent(ShipwreckEventHandler eventToIssue)

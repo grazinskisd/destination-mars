@@ -9,6 +9,7 @@ namespace Ldjam43
     {
         public event ShipEventHandler OnDie;
         public event ShipEventHandler OnWin;
+        public event ShipEventHandler OnCollision;
 
         private const string SHIPWRECK = "Shipwreck";
 
@@ -20,7 +21,7 @@ namespace Ldjam43
 
         public ShipResources Resources;
         public GameManager GameManager;
-        public ParticleSystem ThrustEffect;
+        public Renderer Renderer;
 
         private Resource Fuel;
         private Resource Oxygen;
@@ -61,15 +62,6 @@ namespace Ldjam43
                 {
                     transform.position += Time.deltaTime * transform.forward * MoveSpeed * Vertical;
                     Fuel.Update();
-                    if (!ThrustEffect.isPlaying)
-                    {
-                        ThrustEffect.Play();
-                    }
-
-                }
-                else
-                {
-                    ThrustEffect.Stop();
                 }
 
                 transform.Rotate(Vector3.up, Horizontal * Time.deltaTime * RotateSpeed);
@@ -79,6 +71,11 @@ namespace Ldjam43
                     Die();
                 }
             }
+        }
+
+        public void SetVisible(bool isVisible)
+        {
+            Renderer.enabled = isVisible;
         }
 
         public void SetResources(float fuel, float oxygen, float food)
@@ -114,6 +111,10 @@ namespace Ldjam43
             {
                 // Win
                 IssueEvent(OnWin);
+            }
+            else
+            {
+                IssueEvent(OnCollision);
             }
         }
 

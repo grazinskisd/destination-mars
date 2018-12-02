@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,6 +18,7 @@ namespace Ldjam43
         public Shipwreck ShipwreckPrefab;
 
         public EndMenu EndMenu;
+        public ParticleSystem ExplosionEffect;
 
         private Vector3 _shipStartPosition;
         private Vector3 _shipStartRotation;
@@ -34,6 +36,8 @@ namespace Ldjam43
             LoadMenu.OnStart += LaunchShip;
             Ship.OnDie += RestartMission;
             Ship.OnWin += ShowEndMenu;
+            Ship.OnCollision += ShipExplosion;
+
             _shipStartPosition = Ship.transform.position;
             _shipStartRotation = Ship.transform.rotation.eulerAngles;
             EndMenu.gameObject.SetActive(false);
@@ -41,11 +45,27 @@ namespace Ldjam43
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name));
         }
 
+        private void ShipExplosion()
+        {
+            Instantiate(ExplosionEffect, Ship.transform.position, Quaternion.identity);
+            IssueEvent(OnPause);
+            StartCoroutine(ProcessExplossion());
+        }
+
         private void ShowEndMenu()
         {
             EndMenu.gameObject.SetActive(true);
             EndMenu.Label.text = string.Format("Sacrifices: {0}", _allWrecks.Count);
             IssueEvent(OnPause);
+        }
+
+        private IEnumerator ProcessExplossion()
+        {
+            Ship.SetVisible(false);
+            yield return new WaitForSeconds(4);
+            ResetShipTransform();
+            Ship.SetVisible(true);
+            SetLoadMenuActive(true);
         }
 
         private void RestartMission()
@@ -56,11 +76,25 @@ namespace Ldjam43
             wreck.Oxygen = Ship.OxygenLeft;
             wreck.Food = Ship.FoodLeft;
             wreck.OnClicked += ShopLoadMenu;
+            wreck.OnCollision += DestroyWreck;
             _allWrecks.Add(wreck);
 
+            ResetShipTransform();
+            SetLoadMenuActive(true);
+        }
+
+        private void DestroyWreck(Shipwreck sender)
+        {
+            Instantiate(ExplosionEffect, sender.transform.position, Quaternion.identity);
+            sender.OnClicked -= ShopLoadMenu;
+            sender.OnCollision -= DestroyWreck;
+            Destroy(sender.gameObject);
+        }
+
+        private void ResetShipTransform()
+        {
             Ship.transform.position = _shipStartPosition;
             Ship.transform.rotation = Quaternion.Euler(_shipStartRotation);
-            SetLoadMenuActive(true);
         }
 
         private void SetLoadMenuActive(bool isActive)
