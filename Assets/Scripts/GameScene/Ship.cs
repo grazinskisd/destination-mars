@@ -114,7 +114,6 @@ namespace Ldjam43
 
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("BEHOLD: " + other.name);
             if (other.CompareTag(SHIPWRECK))
             {
                 // Can interact
