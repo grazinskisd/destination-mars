@@ -6,10 +6,10 @@ namespace Ldjam43
     public delegate void LoadMenuEventHandler();
     public class LoadMenu: MonoBehaviour
     {
-        private const string CAPACITY = "Capacity: {0}";
-        private const string FUEL = "Fuel: {0}";
-        private const string OXYGEN = "Oxygen: {0}";
-        private const string FOOD = "Food: {0}";
+        private const string CAPACITY = "Capacity: {0:0}";
+        private const string FUEL = "Fuel: {0:0}";
+        private const string OXYGEN = "Oxygen: {0:0}";
+        private const string FOOD = "Food: {0:0}";
         private const string DEFAULT_EXPLANATION = "Select starting resources for the mission.";
 
         public event LoadMenuEventHandler OnStart;
@@ -89,21 +89,21 @@ namespace Ldjam43
 
             Fuel.Slider.onValueChanged.AddListener((val) =>
             {
-                Fuel.Label.text = string.Format(FUEL, Mathf.Round(val));
+                Fuel.Label.text = string.Format(FUEL, val);
                 UpdateCapacity();
                 IssueEvent(OnSliderChanged);
             });
 
             Oxygen.Slider.onValueChanged.AddListener((val) =>
             {
-                Oxygen.Label.text = string.Format(OXYGEN, Mathf.Round(val));
+                Oxygen.Label.text = string.Format(OXYGEN, val);
                 UpdateCapacity();
                 IssueEvent(OnSliderChanged);
             });
 
             Food.Slider.onValueChanged.AddListener((val) =>
             {
-                Food.Label.text = string.Format(FOOD, Mathf.Round(val));
+                Food.Label.text = string.Format(FOOD, val);
                 UpdateCapacity();
                 IssueEvent(OnSliderChanged);
             });
@@ -116,7 +116,7 @@ namespace Ldjam43
         private void UpdateCapacity()
         {
             float leftCap = _currentCapacity - (IsLoading ? GetSum() : GetDiffSum());
-            CapacityLabel.text = string.Format(CAPACITY, Mathf.Round(leftCap));
+            CapacityLabel.text = string.Format(CAPACITY, leftCap);
             CapacityLabel.color = leftCap < 0 ? Color.red : Color.white;
             StartButton.interactable = leftCap >= 0;
         }

@@ -74,6 +74,7 @@ namespace Ldjam43
                         ThrustEffect.Play();
                         _isMoving = true;
                         IssueEvent(OnThurst);
+                        Rigidbody.velocity = Vector3.zero;
                     }
                 }
                 else

@@ -84,6 +84,7 @@ namespace Ldjam43
         private void RestartMission()
         {
             IssueEvent(OnPause);
+
             var wreck = Instantiate(ShipwreckPrefab, Ship.transform.position, Ship.transform.rotation);
             wreck.Fuel = Ship.FuelLeft;
             wreck.Oxygen = Ship.OxygenLeft;
