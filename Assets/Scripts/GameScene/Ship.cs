@@ -113,10 +113,11 @@ namespace Ldjam43
 
         private void OnTriggerEnter(Collider other)
         {
+            Debug.Log("BEHOLD: " + other.name);
             if (other.CompareTag(SHIPWRECK))
             {
                 // Can interact
-                var wreck = other.GetComponent<Shipwreck>();
+                var wreck = other.GetComponentInParent<Shipwreck>();
                 wreck.Interactable = true;
             }
             else if (other.CompareTag(MARS))
@@ -131,7 +132,7 @@ namespace Ldjam43
             if (other.CompareTag(SHIPWRECK))
             {
                 // Can no longer interact
-                var wreck = other.GetComponent<Shipwreck>();
+                var wreck = other.GetComponentInParent<Shipwreck>();
                 wreck.Interactable = false;
             }
         }

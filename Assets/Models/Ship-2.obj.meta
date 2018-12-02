@@ -1,16 +1,16 @@
 fileFormatVersion: 2
-guid: d5e8335b30b46ef44b32ea121fb00b38
+guid: f6416e8d0aa04b6478ec5a929ee0dd71
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
-    100000: Ship-1
+    100000: Ship-2
     100002: //RootNode
-    400000: Ship-1
+    400000: Ship-2
     400002: //RootNode
-    2100000: Ship-1Mat
-    2300000: Ship-1
-    3300000: Ship-1
-    4300000: Ship-1
+    2100000: Ship-2Mat
+    2300000: Ship-2
+    3300000: Ship-2
+    4300000: Ship-2
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -42,11 +42,11 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.05
+    globalScale: 0.04
     meshCompression: 3
     addColliders: 0
     importVisibility: 1
-    importBlendShapes: 0
+    importBlendShapes: 1
     importCameras: 0
     importLights: 0
     swapUVChannels: 0
