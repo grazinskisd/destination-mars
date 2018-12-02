@@ -24,6 +24,7 @@ namespace Ldjam43
         public ShipResources Resources;
         public GameManager GameManager;
         public Renderer Renderer;
+        public ParticleSystem ThrustEffect;
 
         private Resource Fuel;
         private Resource Oxygen;
@@ -68,6 +69,7 @@ namespace Ldjam43
 
                     if (!_isMoving)
                     {
+                        ThrustEffect.Play();
                         _isMoving = true;
                         IssueEvent(OnThurst);
                     }
@@ -76,6 +78,7 @@ namespace Ldjam43
                 {
                     if (_isMoving)
                     {
+                        ThrustEffect.Stop();
                         _isMoving = false;
                         IssueEvent(OnThurstStop);
                     }
