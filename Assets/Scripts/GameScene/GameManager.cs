@@ -12,6 +12,7 @@ namespace Ldjam43
     {
         public event GameEventManager OnRun;
         public event GameEventManager OnPause;
+        public event GameEventManager OnWreckDestroyed;
 
         public LoadMenu LoadMenu;
         public Ship Ship;
@@ -89,6 +90,7 @@ namespace Ldjam43
             sender.OnClicked -= ShopLoadMenu;
             sender.OnCollision -= DestroyWreck;
             Destroy(sender.gameObject);
+            IssueEvent(OnWreckDestroyed);
         }
 
         private void ResetShipTransform()

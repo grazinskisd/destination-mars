@@ -10,6 +10,8 @@ namespace Ldjam43
         public event ShipEventHandler OnDie;
         public event ShipEventHandler OnWin;
         public event ShipEventHandler OnCollision;
+        public event ShipEventHandler OnThurst;
+        public event ShipEventHandler OnThurstStop;
 
         private const string SHIPWRECK = "Shipwreck";
 
@@ -32,6 +34,7 @@ namespace Ldjam43
         public float FoodLeft { get { return Food.Value; } }
 
         private State _state;
+        private bool _isMoving;
 
         private void Start()
         {
@@ -62,6 +65,20 @@ namespace Ldjam43
                 {
                     transform.position += Time.deltaTime * transform.forward * MoveSpeed * Vertical;
                     Fuel.Update();
+
+                    if (!_isMoving)
+                    {
+                        _isMoving = true;
+                        IssueEvent(OnThurst);
+                    }
+                }
+                else
+                {
+                    if (_isMoving)
+                    {
+                        _isMoving = false;
+                        IssueEvent(OnThurstStop);
+                    }
                 }
 
                 transform.Rotate(Vector3.up, Horizontal * Time.deltaTime * RotateSpeed);
