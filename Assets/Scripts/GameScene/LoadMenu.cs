@@ -10,6 +10,7 @@ namespace Ldjam43
         private const string FUEL = "Fuel: {0}";
         private const string OXYGEN = "Oxygen: {0}";
         private const string FOOD = "Food: {0}";
+        private const string DEFAULT_EXPLANATION = "Select starting resources for the mission.";
 
         public event LoadMenuEventHandler OnStart;
         public event LoadMenuEventHandler OnSliderChanged;
@@ -20,6 +21,15 @@ namespace Ldjam43
         public Load Oxygen;
         public Load Food;
         public Button StartButton;
+        public Text ExplanationLabel;
+
+        public string ExplanationText
+        {
+            set
+            {
+                ExplanationLabel.text = value;
+            }
+        }
 
         private bool _canStart;
         private float _currentCapacity;
@@ -62,6 +72,8 @@ namespace Ldjam43
             _currentCapacity = StartCapacity;
             SetSliderValues(33, 33, 33);
             UpdateCapacity();
+
+            ExplanationText = DEFAULT_EXPLANATION;
         }
 
         private void ResetSlider(Slider slider)

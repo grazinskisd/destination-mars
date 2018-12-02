@@ -88,7 +88,7 @@ namespace Ldjam43
             wreck.Fuel = Ship.FuelLeft;
             wreck.Oxygen = Ship.OxygenLeft;
             wreck.Food = Ship.FoodLeft;
-            wreck.OnClicked += ShopLoadMenu;
+            wreck.OnClicked += ShowLoadMenu;
             wreck.OnCollision += DestroyWreck;
             _allWrecks.Add(wreck);
 
@@ -99,7 +99,7 @@ namespace Ldjam43
         private void DestroyWreck(Shipwreck sender)
         {
             Instantiate(ExplosionEffect, sender.transform.position, Quaternion.identity);
-            sender.OnClicked -= ShopLoadMenu;
+            sender.OnClicked -= ShowLoadMenu;
             sender.OnCollision -= DestroyWreck;
             Destroy(sender.gameObject);
             IssueEvent(OnWreckDestroyed);
@@ -116,9 +116,10 @@ namespace Ldjam43
             LoadMenu.gameObject.SetActive(isActive);
         }
 
-        private void ShopLoadMenu(Shipwreck sender)
+        private void ShowLoadMenu(Shipwreck sender)
         {
             SetLoadMenuActive(true);
+            LoadMenu.ExplanationText = "Scavenge resources from abandoned ship.";
             LoadMenu.SetSliderValues(sender.Fuel, sender.Oxygen, sender.Food);
             var shipCap = LoadMenu.StartCapacity - (Ship.FoodLeft + Ship.FuelLeft + Ship.OxygenLeft);
 
