@@ -9,6 +9,8 @@ namespace Ldjam43
     {
         public event ShipEventHandler OnDie;
 
+        private const string SHIPWRECK = "Shipwreck";
+
         public float MoveSpeed;
         public float RotateSpeed;
         public float FuelUsage;
@@ -60,6 +62,11 @@ namespace Ldjam43
                 }
 
                 transform.Rotate(Vector3.up, Horizontal * Time.deltaTime * RotateSpeed);
+
+                if (Input.GetKeyDown(KeyCode.K))
+                {
+                    Die();
+                }
             }
         }
 
@@ -72,17 +79,22 @@ namespace Ldjam43
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Shipwreck"))
+            Debug.Log("BEHOLD " + other.name);
+            if (other.CompareTag(SHIPWRECK))
             {
                 // Can interact
+                var wreck = other.GetComponent<Shipwreck>();
+                wreck.Interactable = true;
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Shipwreck"))
+            if (other.CompareTag(SHIPWRECK))
             {
                 // Can no longer interact
+                var wreck = other.GetComponent<Shipwreck>();
+                wreck.Interactable = false;
             }
         }
 
