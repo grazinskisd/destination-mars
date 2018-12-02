@@ -12,16 +12,30 @@ namespace Ldjam43
 
         public LoadMenu LoadMenu;
         public Ship Ship;
+        public Shipwreck ShipwreckPrefab;
+
+        private Vector3 _shipStartPosition;
+        private Vector3 _shipStartRotation;
 
         private void Start()
         {
             LoadMenu.OnStart += LaunchShip;
-            Ship.OnDie += Pause;
+            Ship.OnDie += RestartMission;
+            _shipStartPosition = Ship.transform.position;
+            _shipStartRotation = Ship.transform.rotation.eulerAngles;
         }
 
-        private void Pause()
+        private void RestartMission()
         {
             IssueEvent(OnPause);
+            var wreck = Instantiate(ShipwreckPrefab, Ship.transform.position, Ship.transform.rotation);
+            wreck.Fuel = Ship.FuelLeft;
+            wreck.Oxygen = Ship.OxygenLeft;
+            wreck.Food = Ship.FoodLeft;
+
+            Ship.transform.position = _shipStartPosition;
+            Ship.transform.rotation = Quaternion.Euler(_shipStartRotation);
+            LoadMenu.gameObject.SetActive(true);
         }
 
         private void LaunchShip()

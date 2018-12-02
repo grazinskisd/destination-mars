@@ -9,7 +9,20 @@ namespace Ldjam43
         public event ResourceEventHandler OnDepleted;
 
         public float Usage;
-        public float Value;
+        public float Value
+        {
+            set
+            {
+                _value = value;
+                _slider.value = value;
+            }
+            get
+            {
+                return _value;
+            }
+        }
+
+        private float _value;
 
         private Slider _slider;
 
@@ -22,7 +35,6 @@ namespace Ldjam43
         public void Update()
         {
             Value -= Usage * Time.deltaTime;
-            _slider.value = Value;
             if(Value <= 0 && OnDepleted != null)
             {
                 OnDepleted();

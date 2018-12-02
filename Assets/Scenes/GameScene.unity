@@ -8173,6 +8173,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LoadMenu: {fileID: 243664238}
   Ship: {fileID: 557511240}
+  ShipwreckPrefab: {fileID: 114762195465078456, guid: 618ca46e648076b4487053a857af6b4f,
+    type: 2}
 --- !u!4 &1706950934
 Transform:
   m_ObjectHideFlags: 0

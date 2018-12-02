@@ -21,6 +21,11 @@ namespace Ldjam43
         private Resource Fuel;
         private Resource Oxygen;
         private Resource Food;
+
+        public float FuelLeft { get { return Fuel.Value; } }
+        public float OxygenLeft { get { return Oxygen.Value; } }
+        public float FoodLeft { get { return Food.Value; } }
+
         private State _state;
 
         private void Start()
@@ -63,6 +68,22 @@ namespace Ldjam43
             Fuel.Value = fuel;
             Oxygen.Value = oxygen;
             Food.Value = food;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Shipwreck"))
+            {
+                // Can interact
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("Shipwreck"))
+            {
+                // Can no longer interact
+            }
         }
 
         private float Horizontal
