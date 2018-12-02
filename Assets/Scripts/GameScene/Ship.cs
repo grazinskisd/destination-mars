@@ -14,6 +14,7 @@ namespace Ldjam43
         public event ShipEventHandler OnThurstStop;
 
         private const string SHIPWRECK = "Shipwreck";
+        private const string MARS = "Mars";
 
         public float MoveSpeed;
         public float RotateSpeed;
@@ -24,6 +25,7 @@ namespace Ldjam43
         public ShipResources Resources;
         public GameManager GameManager;
         public Renderer Renderer;
+        public Rigidbody Rigidbody;
         public ParticleSystem ThrustEffect;
 
         private Resource Fuel;
@@ -64,7 +66,7 @@ namespace Ldjam43
 
                 if (Vertical > 0)
                 {
-                    transform.position += Time.deltaTime * transform.forward * MoveSpeed * Vertical;
+                    Rigidbody.velocity = transform.forward * MoveSpeed * Vertical;
                     Fuel.Update();
 
                     if (!_isMoving)
@@ -91,6 +93,10 @@ namespace Ldjam43
                     Die();
                 }
             }
+            else
+            {
+                Rigidbody.velocity = Vector3.zero;
+            }
         }
 
         public void SetVisible(bool isVisible)
@@ -113,6 +119,11 @@ namespace Ldjam43
                 var wreck = other.GetComponent<Shipwreck>();
                 wreck.Interactable = true;
             }
+            else if (other.CompareTag(MARS))
+            {
+                // Win
+                IssueEvent(OnWin);
+            }
         }
 
         private void OnTriggerExit(Collider other)
@@ -127,15 +138,7 @@ namespace Ldjam43
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.transform.CompareTag("Mars"))
-            {
-                // Win
-                IssueEvent(OnWin);
-            }
-            else
-            {
-                IssueEvent(OnCollision);
-            }
+            IssueEvent(OnCollision);
         }
 
         private float Horizontal
