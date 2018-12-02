@@ -60,6 +60,8 @@ namespace Ldjam43
             ResetSlider(Food.Slider);
 
             _currentCapacity = StartCapacity;
+            SetSliderValues(33, 33, 33);
+            UpdateCapacity();
         }
 
         private void ResetSlider(Slider slider)
@@ -75,21 +77,21 @@ namespace Ldjam43
 
             Fuel.Slider.onValueChanged.AddListener((val) =>
             {
-                Fuel.Label.text = string.Format(FUEL, val);
+                Fuel.Label.text = string.Format(FUEL, Mathf.Round(val));
                 UpdateCapacity();
                 IssueEvent(OnSliderChanged);
             });
 
             Oxygen.Slider.onValueChanged.AddListener((val) =>
             {
-                Oxygen.Label.text = string.Format(OXYGEN, val);
+                Oxygen.Label.text = string.Format(OXYGEN, Mathf.Round(val));
                 UpdateCapacity();
                 IssueEvent(OnSliderChanged);
             });
 
             Food.Slider.onValueChanged.AddListener((val) =>
             {
-                Food.Label.text = string.Format(FOOD, val);
+                Food.Label.text = string.Format(FOOD, Mathf.Round(val));
                 UpdateCapacity();
                 IssueEvent(OnSliderChanged);
             });
@@ -102,7 +104,7 @@ namespace Ldjam43
         private void UpdateCapacity()
         {
             float leftCap = _currentCapacity - (IsLoading ? GetSum() : GetDiffSum());
-            CapacityLabel.text = string.Format(CAPACITY, leftCap);
+            CapacityLabel.text = string.Format(CAPACITY, Mathf.Round(leftCap));
             CapacityLabel.color = leftCap < 0 ? Color.red : Color.white;
             StartButton.interactable = leftCap >= 0;
         }

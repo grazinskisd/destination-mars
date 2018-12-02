@@ -19,6 +19,10 @@ namespace Ldjam43
         private Vector3 _shipStartRotation;
 
         private List<Shipwreck> _allWrecks;
+        private float _tmpFuel;
+        private float _tmpOxygen;
+        private float _tmpFood;
+        private Shipwreck _tmpWreck;
 
         private void Start()
         {
@@ -55,34 +59,42 @@ namespace Ldjam43
             SetLoadMenuActive(true);
             LoadMenu.SetSliderValues(sender.Fuel, sender.Oxygen, sender.Food);
             var shipCap = LoadMenu.StartCapacity - (Ship.FoodLeft + Ship.FuelLeft + Ship.OxygenLeft);
-            //var wreckCap = LoadMenu.StartCapacity - (sender.Fuel + sender.Oxygen + sender.Food);
 
-            Debug.Log("shipCap: " + shipCap);
-
-            //var minFuel = GetMin(Ship.FuelLeft, sender.Fuel, shipCap);
-            //var minOxygen = GetMin(Ship.OxygenLeft, sender.Oxygen, shipCap);
-            //var minFood = GetMin(Ship.FoodLeft, sender.Food, shipCap);
-            //LoadMenu.SetMinValuesForSliders(minFuel, minOxygen, minFood);
-
-            //var maxFuel = GetMax(Ship.FuelLeft, sender.Fuel, wreckCap);
-            //var maxOxygen = GetMax(Ship.OxygenLeft, sender.Oxygen, wreckCap);
-            //var maxFood = GetMax(Ship.FoodLeft, sender.Food, wreckCap);
             LoadMenu.IsLoading = false;
             LoadMenu.SetCapacity(Mathf.Round(shipCap));
             LoadMenu.SetMaxValuesForSliders(sender.Fuel, sender.Oxygen, sender.Food);
-
+            _tmpFuel = Ship.FuelLeft;
+            _tmpOxygen = Ship.OxygenLeft;
+            _tmpFood = Ship.FoodLeft;
+            _tmpWreck = sender;
             LoadMenu.OnSliderChanged += UpdateShipResources;
+            LoadMenu.OnStart -= LaunchShip;
+            LoadMenu.OnStart += ResumeMission;
 
             IssueEvent(OnPause);
             Debug.Log("CLICK");
-            // TODO: make it work, god dam it!
+        }
+
+        private void ResumeMission()
+        {
+            LoadMenu.OnSliderChanged -= UpdateShipResources;
+
+            _tmpWreck.Fuel = LoadMenu.Fuel.Slider.value;
+            _tmpWreck.Oxygen = LoadMenu.Oxygen.Slider.value;
+            _tmpWreck.Food = LoadMenu.Food.Slider.value;
+
+            LoadMenu.ResetMenu();
+            SetLoadMenuActive(false);
+            LoadMenu.OnStart -= ResumeMission;
+            LoadMenu.OnStart += LaunchShip;
+            IssueEvent(OnRun);
         }
 
         private void UpdateShipResources()
         {
-            var fuel = Ship.FuelLeft + (LoadMenu.Fuel.Slider.maxValue - LoadMenu.Fuel.Slider.value);
-            var oxygen = Ship.OxygenLeft + (LoadMenu.Oxygen.Slider.maxValue - LoadMenu.Oxygen.Slider.value);
-            var food = Ship.FoodLeft + (LoadMenu.Food.Slider.maxValue - LoadMenu.Food.Slider.value);
+            var fuel = _tmpFuel + (LoadMenu.Fuel.Slider.maxValue - LoadMenu.Fuel.Slider.value);
+            var oxygen = _tmpOxygen + (LoadMenu.Oxygen.Slider.maxValue - LoadMenu.Oxygen.Slider.value);
+            var food = _tmpFood + (LoadMenu.Food.Slider.maxValue - LoadMenu.Food.Slider.value);
 
             Ship.SetResources(fuel, oxygen, food);
         }
