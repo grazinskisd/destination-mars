@@ -20,6 +20,7 @@ namespace Ldjam43
 
         public ShipResources Resources;
         public GameManager GameManager;
+        public ParticleSystem ThrustEffect;
 
         private Resource Fuel;
         private Resource Oxygen;
@@ -60,6 +61,15 @@ namespace Ldjam43
                 {
                     transform.position += Time.deltaTime * transform.forward * MoveSpeed * Vertical;
                     Fuel.Update();
+                    if (!ThrustEffect.isPlaying)
+                    {
+                        ThrustEffect.Play();
+                    }
+
+                }
+                else
+                {
+                    ThrustEffect.Stop();
                 }
 
                 transform.Rotate(Vector3.up, Horizontal * Time.deltaTime * RotateSpeed);

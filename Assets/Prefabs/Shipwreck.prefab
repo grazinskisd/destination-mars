@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33714576256887322}
   - component: {fileID: 23749703215045816}
   - component: {fileID: 114762195465078456}
-  - component: {fileID: 65824564880497090}
+  - component: {fileID: 65971054430139996}
   - component: {fileID: 54989850522178224}
   m_Layer: 0
   m_Name: Shipwreck
@@ -158,7 +158,7 @@ MeshFilter:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1209171837046896}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300000, guid: d5e8335b30b46ef44b32ea121fb00b38, type: 3}
 --- !u!54 &54989850522178224
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -174,7 +174,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 4
   m_CollisionDetection: 0
---- !u!65 &65824564880497090
+--- !u!65 &65971054430139996
 BoxCollider:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -184,8 +184,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2, y: 0.1, z: 2}
+  m_Center: {x: 0, y: 0.025, z: 0}
 --- !u!114 &114762195465078456
 MonoBehaviour:
   m_ObjectHideFlags: 1
