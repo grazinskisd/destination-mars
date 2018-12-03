@@ -89,7 +89,7 @@ namespace Ldjam43
 
                 transform.Rotate(Vector3.up, Horizontal * Time.deltaTime * RotateSpeed);
 
-                if (Input.GetKeyDown(KeyCode.K))
+                if (Input.GetKeyDown(KeyCode.Q))
                 {
                     Die();
                 }

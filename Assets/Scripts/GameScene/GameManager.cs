@@ -68,7 +68,7 @@ namespace Ldjam43
         private void ShowEndMenu()
         {
             EndMenu.gameObject.SetActive(true);
-            EndMenu.Label.text = string.Format("Sacrifices: {0}", _allWrecks.Count);
+            EndMenu.Label.text = string.Format("Missions: {0}", _allWrecks.Count);
             IssueEvent(OnPause);
         }
 
