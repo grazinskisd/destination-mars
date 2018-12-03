@@ -54,7 +54,7 @@ namespace Ldjam43
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                RestartGame();
+                SceneManager.LoadScene("StartScene");
             }
         }
 

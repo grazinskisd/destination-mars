@@ -1466,9 +1466,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 10
   RotateSpeed: 20
-  FuelUsage: 1
-  OxygenUsage: 1
-  FoodUsage: 1
+  FuelUsage: 1.5
+  OxygenUsage: 0.5
+  FoodUsage: 0.5
   Resources: {fileID: 1333537828}
   GameManager: {fileID: 1706950933}
   Renderer: {fileID: 557511237}
